@@ -19,6 +19,9 @@ import LightModeRoundedIcon from '@mui/icons-material/LightModeRounded';
 import BadgeRoundedIcon from '@mui/icons-material/BadgeRounded';
 import GoogleIcon from '@/components/Icons/GoogleIcon';
 import LinkedInIcon from '@mui/icons-material/LinkedIn';
+import {signIn} from 'next-auth/react';
+import Google from 'next-auth/providers/google';
+import {useRouter} from 'next/navigation';
 
 interface FormElements extends HTMLFormControlsCollection {
   email: HTMLInputElement;
@@ -33,7 +36,7 @@ function ColorSchemeToggle(props: IconButtonProps) {
   const { onClick, ...other } = props;
   const { mode, setMode } = useColorScheme();
   const [mounted, setMounted] = React.useState(false);
-
+  
   React.useEffect(() => setMounted(true), []);
 
   return (
@@ -54,6 +57,46 @@ function ColorSchemeToggle(props: IconButtonProps) {
 }
 
 export default function JoySignInSideTemplate() {
+
+
+    const [email, setEmail] = React.useState('');
+    const [password, setPassword] = React.useState('');
+    const router = useRouter();
+
+const haddlesubmit = async (e:any) => {
+    e.preventDefault();
+    try
+    {
+      const res = await fetch('/api/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({email, password}),
+      });
+      const data = await res.json();
+
+      if (res.ok) {
+        
+        console.log('Login successful:');
+       
+        router.push('/isauth');
+      } else {
+        // Handle login error
+        console.error('Login failed:', data);
+        alert(data.message || 'Login failed');
+      }
+
+
+    } catch (error) {
+      console.error(error);
+    }
+
+
+  }
+  
+
+
   return (
     <CssVarsProvider defaultMode="dark" disableTransitionOnChange>
       <CssBaseline />
@@ -140,8 +183,16 @@ export default function JoySignInSideTemplate() {
                     Sign up!
                   </Link>
                 </Typography>
-              <GoogleIcon/>
+                <Button onClick={() => signIn('google')}>
+                <GoogleIcon/>
+              </Button>
+              <Button onClick={() => signIn('linkedin')}>
               <LinkedInIcon/>
+              </Button>
+              
+              <Button onClick={() => signIn('zoom')}>
+              </Button>
+
               </Stack>
             </Stack>
             <Divider
@@ -155,25 +206,16 @@ export default function JoySignInSideTemplate() {
             </Divider>
             <Stack gap={4} sx={{ mt: 2 }}>
               <form
-                onSubmit={(event: React.FormEvent<SignInFormElement>) => {
-                  event.preventDefault();
-                  const formElements = event.currentTarget.elements;
-                  const data = {
-                    email: formElements.email.value,
-                    password: formElements.password.value,
-                    persistent: formElements.persistent.checked,
-                  };
-                  alert(JSON.stringify(data, null, 2));
-                }}
-                action="api/auth/signin"
+               onSubmit={haddlesubmit}
+               
               >
                 <FormControl required>
                   <FormLabel>Email</FormLabel>
-                  <Input type="email" name="email" />
+                  <Input type="email" value={email} onChange={(e)=>setEmail(e.target.value)} required/>
                 </FormControl>
                 <FormControl required>
                   <FormLabel>Password</FormLabel>
-                  <Input type="password" name="password" />
+                  <Input type="password" value={password} onChange={(e)=>setPassword(e.target.value)} required/>
                 </FormControl>
                 <Stack gap={4} sx={{ mt: 2 }}>
                   <Box

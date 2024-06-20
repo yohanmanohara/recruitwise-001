@@ -1,4 +1,4 @@
-'use client'
+"use client"
 import * as React from 'react';
 import { CssVarsProvider, useColorScheme } from '@mui/joy/styles';
 import GlobalStyles from '@mui/joy/GlobalStyles';
@@ -19,9 +19,9 @@ import LightModeRoundedIcon from '@mui/icons-material/LightModeRounded';
 import BadgeRoundedIcon from '@mui/icons-material/BadgeRounded';
 import GoogleIcon from '@/components/Icons/GoogleIcon';
 import LinkedInIcon from '@mui/icons-material/LinkedIn';
-import {signIn} from 'next-auth/react';
-import Google from 'next-auth/providers/google';
-import {useRouter} from 'next/navigation';
+import { signIn } from 'next-auth/react';
+import { useRouter } from 'next/navigation'; // Change import path to 'next/router'
+import { useEffect } from 'react';
 
 interface FormElements extends HTMLFormControlsCollection {
   email: HTMLInputElement;
@@ -57,43 +57,43 @@ function ColorSchemeToggle(props: IconButtonProps) {
 }
 
 export default function JoySignInSideTemplate() {
+  const [email, setEmail] = React.useState('');
+  const [password, setPassword] = React.useState('');
+  const router = useRouter() as any;
+  const postjob = router.query?.postjob === 'true'; // Check if postjob is 'true'
 
 
-    const [email, setEmail] = React.useState('');
-    const [password, setPassword] = React.useState('');
-    const router = useRouter();
-
-const haddlesubmit = async (e:any) => {
+  const haddlesubmit = async (e: React.FormEvent<HTMLFormElement>) => { // Pass event to the function
     e.preventDefault();
-    try
-    {
+    try {
       const res = await fetch('/api/login', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({email, password}),
+        body: JSON.stringify({ email, password }),
       });
       const data = await res.json();
 
       if (res.ok) {
-        
-        console.log('Login successful:');
        
-        router.push('/isauth');
+        if (postjob) {
+          router.push('/employer/Overview');
+          console.log('Post job is true');
+        } else {
+          router.push('/employee/Overview');
+          console.log('Login successful: employee');
+        }
+        
       } else {
         // Handle login error
         console.error('Login failed:', data);
         alert(data.message || 'Login failed');
       }
-
-
     } catch (error) {
       console.error(error);
     }
-
-
-  }
+  };
   
 
 
@@ -145,7 +145,8 @@ const haddlesubmit = async (e:any) => {
               <IconButton variant="soft" color="primary" size="sm">
                 <BadgeRoundedIcon />
               </IconButton>
-              <Typography level="title-lg">Recruitwise</Typography>
+              <Typography level="title-lg" onClick={() => router.push("/") }sx={{
+        cursor: 'pointer'}} >Recruitwise</Typography>
             </Box>
             <ColorSchemeToggle />
           </Box>

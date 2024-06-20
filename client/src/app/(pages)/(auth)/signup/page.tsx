@@ -166,7 +166,8 @@ const haddlesubmit = async (e:any) => {
               <IconButton color="primary" size="sm">
                 <BadgeRoundedIcon />
               </IconButton>
-              <Typography level="title-lg">Recruitwise</Typography>
+              <Typography level="title-lg" onClick={() => router.push("/") }sx={{
+                 cursor: 'pointer'}} >Recruitwise</Typography>
             </Box>
             <ColorSchemeToggle />
           </Box>

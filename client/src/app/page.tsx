@@ -1,10 +1,10 @@
 import React from 'react'
-
+import ResponsiveAppBar from '@/components/navbar/ResponsiveAppBar'
 const page = () => {
   return (
-    <div className='flex items-center justify-center'>
-      <div>div 1</div>
-      <div>div 2</div>
+    <div >
+      <ResponsiveAppBar/>
+      
     </div>
   )
 }

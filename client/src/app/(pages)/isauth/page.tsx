@@ -9,16 +9,20 @@ export default function Isauth() {
     router.push('/employer/overview'); // Navigate to the employee overview page
   };
 
+  const navigate = () => {
+    router.push('/employee/hiring'); // Navigate to the employer page
+  }
+
   return (
     <div className='h-screen w-full flex justify-center items-center bg-black text-white gap-4'>
       <button
         className='bg-red-600 p-8 rounded-xl'
         onClick={navigateToOverview} // Call navigateToOverview function on button click
       >
-        Employee
-      </button>
-      <button className='bg-orange-400 p-8 rounded-xl'>
         Employer
+      </button>
+      <button className='bg-orange-400 p-8 rounded-xl' onClick={navigate}>
+        Employee
       </button>
     </div>
   );

@@ -14,8 +14,11 @@ import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
 import AdbIcon from '@mui/icons-material/Adb';
 import { red } from '@mui/material/colors';
-import { useRouter } from 'next/navigation';
+import { useRouter} from 'next/navigation';
 import { Search } from '@mui/icons-material';
+import { useState } from 'react';
+import { queryObjects } from 'v8';
+import Link from	'next/link';
 
 const pages = ['Products', 'Pricing', 'Blog'];
 const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
@@ -50,6 +53,7 @@ function ResponsiveAppBar() {
       <Container maxWidth="xl">
         <Toolbar disableGutters>
           <AdbIcon sx={{ display: { xs: 'none', md: 'flex' }, mr: 1 }} />
+          
           <Typography
             variant="h6"
             noWrap
@@ -137,26 +141,18 @@ function ResponsiveAppBar() {
 
           <Box sx={{ flexGrow: 0 ,display: 'flex' ,gap:2 , alignItems: 'center'}} >
 
-
+<Link rel="stylesheet" href={
+  {
+    pathname: '/signin',
+    query: { postJob: true },
+  }
+} >
           <Typography  sx={{ color: red[50] , cursor: 'pointer'}} 
-          onClick={() => {
-            searchParams : {
-              postJob : true;
-
-            };
-              router.push('/signin');
-              
-
-            }
-          }
-         
-          
-
-          
+    
           >
                   + Post a Job
           </Typography>
-
+</Link>
           <Typography  sx={{ color: red[50] , cursor: 'pointer'}} 
            onClick={() => {
             router.push('/signin');

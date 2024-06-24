@@ -20,7 +20,7 @@ import BadgeRoundedIcon from '@mui/icons-material/BadgeRounded';
 import GoogleIcon from '@/components/Icons/GoogleIcon';
 import LinkedInIcon from '@mui/icons-material/LinkedIn';
 import { signIn } from 'next-auth/react';
-import { useRouter } from 'next/navigation'; // Change import path to 'next/router'
+import { useRouter, useSearchParams } from 'next/navigation'; // Change import path to 'next/router'
 import { useEffect } from 'react';
 
 interface FormElements extends HTMLFormControlsCollection {
@@ -56,11 +56,15 @@ function ColorSchemeToggle(props: IconButtonProps) {
   );
 }
 
-export default function JoySignInSideTemplate() {
+export default function JoySignInSideTemplate(
+) {
+  const searchParams = useSearchParams();
+  console.log(searchParams.get("postJob"));
   const [email, setEmail] = React.useState('');
   const [password, setPassword] = React.useState('');
-  const router = useRouter() as any;
-  const postjob = router.query?.postjob === 'true'; // Check if postjob is 'true'
+  const router = useRouter();
+  const postjob = searchParams.get("postJob") === 'true';
+  
 
 
   const haddlesubmit = async (e: React.FormEvent<HTMLFormElement>) => { // Pass event to the function
@@ -78,7 +82,7 @@ export default function JoySignInSideTemplate() {
       if (res.ok) {
        
         if (postjob) {
-          router.push('/employer/Overview');
+          router.push('/employer/overview');
           console.log('Post job is true');
         } else {
           router.push('/employee/Overview');
@@ -184,9 +188,20 @@ export default function JoySignInSideTemplate() {
                     Sign up!
                   </Link>
                 </Typography>
-                <Button onClick={() => signIn('google')}>
-                <GoogleIcon/>
-              </Button>
+
+              <Button onClick={() => signIn('google', 
+                
+                  
+                  {callbackUrl: `/api/auth/callback/google?postjob=${postjob}`}
+                
+              )}>
+              <span>Sign in with Google</span>
+  <GoogleIcon/>
+</Button>
+
+                 
+
+
               <Button onClick={() => signIn('linkedin')}>
               <LinkedInIcon/>
               </Button>
